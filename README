@@ -1,0 +1,9 @@
+This is a collection of simple functions that I want to only 
+write once, and never again.  
+
+Current additions:
+
+Sockets
+	sockets.{h,c} - 2 simple server/client functions that return a socket.
+
+
