@@ -6,4 +6,7 @@ Current additions:
 Sockets
 	sockets.{h,c} - 2 simple server/client functions that return a socket.
 
+Primes
+	A small slow program to find all primes up to a given number.
+	Very slow algorithm, multi-threaded.
 
