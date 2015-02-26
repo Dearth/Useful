@@ -10,3 +10,6 @@ Primes
 	A small slow program to find all primes up to a given number.
 	Very slow algorithm, multi-threaded.
 
+Cyper
+	A small program that reads in a message file and XORs the bytes with a
+	key text.
