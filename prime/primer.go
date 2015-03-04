@@ -50,6 +50,19 @@ func isPrime(p, i *big.Int, tf chan bool) {
 	runtime.Goexit()
 }
 
+func spawner(pos_prime, sqrt_prime *big.Int, tf chan bool) {
+	base := new (big.Int)
+	one := new (big.Int)
+	one.SetInt64(1)
+
+	for base.SetInt64(2); base.Cmp(sqrt_prime) != 1; base.Add(base,one) {
+        temp := new (big.Int)
+        temp.Set(base)
+
+        go isPrime(pos_prime, temp, tf)
+    }
+}	
+
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
@@ -69,17 +82,8 @@ func main() {
 	base.SetInt64(2)
 
 	sqrt_prime = bigIntSqrt(pos_prime)
-	
-	for ; base.Cmp(sqrt_prime) != 1; base.Add(base,one) {
-		temp := new (big.Int)
-		temp.Set(base)
 
-		if runtime.NumGoroutine() > 500000 {
-			base.Sub(base,one)
-		} else {
-			go isPrime(pos_prime, temp, tf)
-		}
-	}
+	go spawner(pos_prime, sqrt_prime, tf)
 
 	for base.SetInt64(2); base.Cmp(sqrt_prime) != 1; base.Add(base,one) {
 		is_prime = is_prime && <-tf
