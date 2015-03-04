@@ -7,8 +7,12 @@ Sockets
 	sockets.{h,c} - 2 simple server/client functions that return a socket.
 
 Primes
-	A small slow program to find all primes up to a given number.
-	Very slow algorithm, multi-threaded.
+	Finder
+		A small slow program to find all primes up to a given number.
+		Very slow algorithm, multicore.
+	Primer
+		A goroutine based primality tester.  Slow tests remainders up
+		to square root of prime.
 
 Passer
 	Writes an 20 x 20 block of text that can be used for random passwords.
