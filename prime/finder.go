@@ -9,12 +9,12 @@ import (
 
 
 func find_prime(num int, tf chan int) {
-	
+
 	for i := 2; i < num; i++ {
-		
+
 		if num%i == 0 {
 			tf <- 0
-			return 
+			return
 		}
 	}
 	tf <- num
@@ -28,7 +28,7 @@ func find_all_primes(num int, tf chan int) {
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())	
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	tf := make(chan int)
 
@@ -49,7 +49,6 @@ func main() {
 		}
 	}
 
-	
 	fmt.Printf("Jobs finished.\n")
 }
 

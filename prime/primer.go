@@ -7,7 +7,9 @@ import (
 	"runtime"
 )
 
-func NEXT(n, i *big.Int) *big.Int {	
+
+//NEXT
+func NEXT(n, i *big.Int) *big.Int {
 	temp_n := new (big.Int)
 	temp_n.Set(n)
 
@@ -16,7 +18,7 @@ func NEXT(n, i *big.Int) *big.Int {
 
 func bigIntSqrt(number *big.Int) *big.Int {
 	temp := new (big.Int)
-	one := new (big.Int) 
+	one := new (big.Int)
 	one.SetInt64(1)
 
 	n := new (big.Int)
@@ -41,52 +43,65 @@ func isPrime(p, i *big.Int, tf chan bool) {
 	temp := new (big.Int)
 	zero := new (big.Int)
 	zero.SetInt64(0)
-	
-	if temp.Mod(p, i).Cmp(zero) == 0 {
-		tf <- false
+
+	if i.ProbablyPrime(10) {
+		if temp.Mod(p, i).Cmp(zero) == 0 {
+			tf <- false
+		} else {
+			tf <- true
+		}
 	} else {
-		tf <- true
+		tf <- true;
 	}
+
 	runtime.Goexit()
 }
 
-func spawner(pos_prime, sqrt_prime *big.Int, tf chan bool) {
+func spawner(pos_prime, sqrt *big.Int, tf chan bool) {
 	base := new (big.Int)
-	one := new (big.Int)
-	one.SetInt64(1)
+	increment := new (big.Int)
+	increment.SetInt64(2)
 
-	for base.SetInt64(2); base.Cmp(sqrt_prime) != 1; base.Add(base,one) {
-        temp := new (big.Int)
-        temp.Set(base)
+	for base.SetInt64(3); base.Cmp(sqrt) < 0; base.Add(base,increment) {
+		temp := new (big.Int)
+		temp.Set(base)
 
-        go isPrime(pos_prime, temp, tf)
-    }
-}	
+		go isPrime(pos_prime, temp, tf)
+	}
+}
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	args := os.Args[1:]
-	
-	pos_prime := new (big.Int)
-	one := new (big.Int)
-	base := new (big.Int)
-	sqrt_prime := new (big.Int)
 
+	pos_prime := new (big.Int)
+	temp := new (big.Int)
+	base := new (big.Int)
+	square := new (big.Int)
+	zero := new (big.Int)
+	increment := new (big.Int)
 	tf := make(chan bool)
 
 	is_prime := true
 
 	pos_prime.SetString(args[0], 10)
-	one.SetInt64(1)
+	increment.SetInt64(2)
 	base.SetInt64(2)
+	zero.SetInt64(0)
+	square = bigIntSqrt(pos_prime)
 
-	sqrt_prime = bigIntSqrt(pos_prime)
+	if pos_prime.Cmp(base) == 0 {
+		is_prime = true
+	} else if temp.Mod(pos_prime, base).Cmp(zero) == 0 {
+		is_prime = false
+	} else {
 
-	go spawner(pos_prime, sqrt_prime, tf)
+		go spawner(pos_prime, square, tf)
 
-	for base.SetInt64(2); base.Cmp(sqrt_prime) != 1; base.Add(base,one) {
-		is_prime = is_prime && <-tf
+		for base.SetInt64(3); base.Cmp(square) < 0; base.Add(base,increment) {
+			is_prime = is_prime && <-tf
+		}
 	}
 
 	if is_prime {
