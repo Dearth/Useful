@@ -1,6 +1,6 @@
 package main
 
-import ( 
+import (
 	"os"
 	"flag"
 	"io"
@@ -31,7 +31,7 @@ func XORdata(m, k, c *os.File) (n int) {
 		if err == io.EOF {
 			_, err := k.Seek(0,0)
 			checkErr(err)
-			_, err = k.Read(keyt) 
+			_, err = k.Read(keyt)
 			checkErr(err)
 		} else {
 			checkErr(err)
@@ -48,14 +48,14 @@ func XORdata(m, k, c *os.File) (n int) {
 
 
 func main() {
-	
+
 	msgPtr := flag.String("msg", "msg.txt", "message to be encrypted")
 	keyPtr := flag.String("key", "key.txt", "key text to be used for encryption")
 	cypPtr := flag.String("cyp", "out.txt", "output name of the encypted text")
 	decrypt := flag.Bool("d", false, "Decrypt out.txt with key.txt")
 
 	flag.Parse()
-	
+
 	if *decrypt {
 		msg, err := os.Create(*msgPtr)
 		checkErr(err)
@@ -65,7 +65,7 @@ func main() {
 
 		cyp, err := os.Open(*cypPtr)
 		checkErr(err)
-	
+
 		for i := 0; i != 1; i = XORdata(cyp, key, msg) {}
 	} else {
 		msg, err := os.Open(*msgPtr)
